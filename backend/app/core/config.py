@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     app_name: str = "Zubaka API"
     environment: str = "development"
     database_url: str 
+    groq_api_key: str
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=False
