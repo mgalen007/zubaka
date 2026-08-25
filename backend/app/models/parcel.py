@@ -32,3 +32,7 @@ class Parcel(Base):
         Float,
         nullable=True,
     )
+    zoning: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
