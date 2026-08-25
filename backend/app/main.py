@@ -14,7 +14,7 @@ app = FastAPI(title=settings.app_name)
 app.include_router(parcels_router, prefix="/api/v1")
 
 
-@app.get("/api/v1/health", tags=["Health check"])
+@app.get("/api/v1/health", tags=["health"])
 async def health_check() -> dict[str, str]:
     return {
         "status": "OK",
@@ -23,7 +23,7 @@ async def health_check() -> dict[str, str]:
     }
 
 
-@app.get("/api/v1/health/db", tags=["Health check"])
+@app.get("/api/v1/health/db", tags=["health"])
 async def db_health_check(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> dict[str, str]:
