@@ -1,6 +1,11 @@
-from fastapi import FastAPI
+from typing import Annotated, cast
+
+from fastapi import Depends, FastAPI
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
+from app.core.database import get_db
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
@@ -12,4 +17,17 @@ async def health_check() -> dict[str, str]:
         "status": "OK",
         "name": settings.app_name,
         "environment": settings.environment,
+    }
+
+
+@app.get("/api/v1/health/db", tags=["Health check"])
+async def db_health_check(
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> dict[str, str]:
+    result = await db.execute(text("SELECT PostGIS_Version()"))
+    extension = cast(int, result.scalar_one())
+
+    return {
+        "status": "OK",
+        "postgis_version": str(extension)
     }
