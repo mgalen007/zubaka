@@ -11,7 +11,7 @@ from sqlalchemy import cast, func, select
 from app.core.database import async_session
 from app.models import Parcel
 
-GEOJSON_PATH = Path("data/mock_parcels.geojson")
+GEOJSON_PATH = Path("app/data/mock_parcels.geojson")
 
 
 class ParcelProperties(TypedDict):
