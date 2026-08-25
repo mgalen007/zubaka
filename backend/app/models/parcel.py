@@ -15,23 +15,23 @@ class Parcel(Base):
         default=uuid4,
     )
 
-    upi: Mapped[str] = mapped_column(
-        String(100),
-        unique=True,
-        index=True,
-        nullable=False,
-    )
+    # upi: Mapped[str] = mapped_column(
+    #     String(100),
+    #     unique=True,
+    #     index=True,
+    #     nullable=False,
+    # )
 
-    geometry: Mapped[object] = mapped_column(
-        Geometry(
-            geometry_type="POLYGON",
-            srid=4326,
-            spatial_index=True,
-        ),
-        nullable=False,
-    )
+    # geometry: Mapped[object] = mapped_column(
+    #     Geometry(
+    #         geometry_type="POLYGON",
+    #         srid=4326,
+    #         spatial_index=True,
+    #     ),
+    #     nullable=False,
+    # )
 
-    area_m2: Mapped[float | None] = mapped_column(
-        Float,
-        nullable=True,
-    )
+    # area_m2: Mapped[float | None] = mapped_column(
+    #     Float,
+    #     nullable=True,
+    # )
