@@ -1,11 +1,11 @@
 from logging.config import fileConfig
 
-from sqlalchemy import pool
+from sqlalchemy import create_engine, pool
 
 from alembic import context
 from app.core.config import get_settings
 from app.core.database import Base
-from app.models import Parcel
+from app.models import Parcel  # noqa: F401 # pyright: ignore[reportUnusedImport]
 
 config = context.config
 
@@ -14,23 +14,29 @@ if config.config_file_name is not None:
 
 settings = get_settings()
 
-# config.set_main_option(
-#     "sqlalchemy.url",
-#     settings.database_url,
-# )
-
 target_metadata = Base.metadata
+
+
+def include_object(
+    _object: object,
+    name: str | None,
+    type_: str,
+    reflected: bool,
+    _compare_to: object | None,
+) -> bool:
+    return not (type_ == "table" and reflected and name == "spatial_ref_sys")
 
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = config.get_main_option("sqlalchemy.url")
+    url = settings.database_url.replace("+asyncpg", "")
 
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -39,8 +45,6 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
-    from sqlalchemy import create_engine
-
     connectable = create_engine(
         settings.database_url.replace("+asyncpg", ""),
         poolclass=pool.NullPool,
@@ -50,6 +54,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
+            include_object=include_object,
         )
 
         with context.begin_transaction():
