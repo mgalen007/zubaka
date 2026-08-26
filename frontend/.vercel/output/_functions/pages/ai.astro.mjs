@@ -1,8 +1,8 @@
 /* empty css                                 */
-import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_DTu46K8G.mjs';
+import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BvIZ4Gm6.mjs';
 import 'kleur/colors';
-import { $ as $$Section, a as $$SectionTitle } from '../chunks/SectionTitle_BK5IRVlp.mjs';
-import { $ as $$MainLayout } from '../chunks/MainLayout_DiLATu-x.mjs';
+import { $ as $$Section, a as $$SectionTitle } from '../chunks/Section_GejLvlJZ.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_BsuaeoN8.mjs';
 export { renderers } from '../renderers.mjs';
 
 var __freeze = Object.freeze;
@@ -199,9 +199,9 @@ Amabwiriza ya zone R1 ni ayahe?
 </button> </div> </div> <!-- Input Form --> <form id="ai-page-form" class="flex gap-3 pt-2"> <input type="text" id="ai-page-input" placeholder="Andika ikibazo cyanjye (Ask a question in Kinyarwanda or English)..." class="flex-1 bg-zinc-800 text-white placeholder-zinc-400 rounded-2xl px-5 py-4 border border-zinc-700 text-base focus:outline-none focus:ring-2 focus:ring-green"> <button type="submit" class="px-8 py-4 bg-green hover:bg-white text-black font-medium text-lg rounded-2xl border border-black shadow-[0px_3px_0px_#ffffff] transition-colors shrink-0">
 Send Question
 </button> </form> </div> </div> ` })) })}`;
-}, "C:/Users/HP/OneDrive/Documents/code/work/ideation/zubaka/frontend/src/pages/ai.astro", void 0);
+}, "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/ai.astro", void 0);
 
-const $$file = "C:/Users/HP/OneDrive/Documents/code/work/ideation/zubaka/frontend/src/pages/ai.astro";
+const $$file = "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/ai.astro";
 const $$url = "/ai";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({

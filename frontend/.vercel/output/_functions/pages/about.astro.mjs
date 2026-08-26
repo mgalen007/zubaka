@@ -1,22 +1,40 @@
 /* empty css                                 */
-import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_DTu46K8G.mjs';
+import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BvIZ4Gm6.mjs';
 import 'kleur/colors';
-import { $ as $$MainLayout } from '../chunks/MainLayout_DiLATu-x.mjs';
-import { $ as $$Sponsors, a as $$Services } from '../chunks/Services_DH5HzSAU.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_BsuaeoN8.mjs';
+import { $ as $$Services } from '../chunks/Services_w1HyV-Kz.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$About = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "title": "About us" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="space-y-20"> <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-3"> <div class="relative flex flex-col-reverse items-center md:flex-row" id="hero"> <div class="row items-center py-5 md:pb-20 md:pt-10"> <div class="text-center space-y-10"> <h2 class="text-5xl font-medium leading-none md:text-6xl">We Navigate the <br> digital landscape <br> for success</h2> <p class="mt-6 mb-8  text-xl font-normal leading-7 sm:mb-12">Our digital marketing agency helps businesses grow and succeed online through a range of services including SEO, PPC, social media marketing, and content creation.</p> <a class="px-9 py-5 bg-zinc-900 hover:bg-white text-white hover:text-black border rounded-2xl justify-items-center md:justify-items-start gap-2.5 inline-flex" rel="noopener noreferrer" href="https://github.com/manulthanura/Positivus" target="_blank"> <h2 class="text-center text-xl font-normal leading-7">Book a consultation</h2> </a> </div> </div> </div> </div> ${renderComponent($$result2, "Sponsors", $$Sponsors, {})} ${renderComponent($$result2, "Services", $$Services, {})} </main> ` })}`;
-}, "C:/Users/HP/OneDrive/Documents/code/work/ideation/zubaka/frontend/src/pages/about.astro", void 0);
+  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "title": "About Zubaka", "description": "Why Zubaka exists: protecting Kigali land buyers from informal broker fraud using real PostGIS parcel data and the Kigali Masterplan." }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="space-y-20"> <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-3"> <div class="relative flex flex-col items-center" id="hero"> <div class="row items-center py-5 md:pb-20 md:pt-10 max-w-3xl"> <div class="text-center space-y-10"> <h2 class="text-5xl font-medium leading-none md:text-6xl">Land fraud shouldn't be this easy</h2> <p class="mt-6 mb-8 text-xl font-normal leading-7 sm:mb-12">
+Across Kigali, informal brokers sell plots without disclosing that they sit in
+                            a wetland buffer, an industrial-only zone, or a restricted area pending government
+                            review — leaving buyers to find out only after they've paid, sometimes right before
+                            a demolition notice. Zubaka exists to close that information gap: look up any parcel
+                            by its Unique Parcel Identifier (UPI) or on the map, and see its real Masterplan
+                            zoning before you commit to anything.
+</p> </div> </div> </div> <div class="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto text-center md:text-left"> <div class="bg-gray rounded-2xl p-8 border border-black shadow-[0px_3px_0px_#191a23]"> <h3 class="text-2xl font-medium mb-4">How it works</h3> <p>
+Parcel boundaries are real PostGIS geometries queried live from a PostgreSQL/PostGIS
+                        database. Each parcel is matched against Kigali's zoning categories (residential,
+                        commercial, mixed-use, restricted/wetland), and an AI model adds a plain-language
+                        explanation of what that means for you — it only explains the result, it never
+                        decides the zoning itself.
+</p> </div> <div class="bg-gray rounded-2xl p-8 border border-black shadow-[0px_3px_0px_#191a23]"> <h3 class="text-2xl font-medium mb-4">This is a demo</h3> <p>
+Zubaka currently runs on 17 mock parcels around Kigali for demonstration purposes —
+                        the zoning rules are illustrative, not an official Rwanda Land Authority record.
+                        Always confirm any real plot with official government sources before making a
+                        purchase decision.
+</p> </div> </div> </div> ${renderComponent($$result2, "Services", $$Services, {})} </main> ` })}`;
+}, "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/about.astro", void 0);
 
-const $$file = "C:/Users/HP/OneDrive/Documents/code/work/ideation/zubaka/frontend/src/pages/about.astro";
+const $$file = "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/about.astro";
 const $$url = "/about";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-        __proto__: null,
-        default: $$About,
-        file: $$file,
-        url: $$url
+    __proto__: null,
+    default: $$About,
+    file: $$file,
+    url: $$url
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const page = () => _page;

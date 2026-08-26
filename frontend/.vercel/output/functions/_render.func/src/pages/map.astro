@@ -9,10 +9,6 @@ import MainLayout from "../layouts/MainLayout.astro";
   title="Interactive Kigali Land Map — Zubaka"
   description="View real-time PostGIS parcel geometries, viewport-aware bounding box zoning, and point-in-polygon land compliance across Kigali."
 >
-  <!-- Load Leaflet CDN Assets natively -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" slot="head" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
-
   <Section>
     <div class="py-6">
       <SectionTitle
@@ -154,13 +150,17 @@ import MainLayout from "../layouts/MainLayout.astro";
     </div>
   </Section>
 
-  <script is:inline>
-    const API_BASE_URL = 'http://localhost:8000/api/v1';
+  <script>
+    import L from "leaflet";
+    import "leaflet/dist/leaflet.css";
+    import { getParcels, getParcelAtPoint, getParcelReport } from "../lib/api";
+    import { getZoningColor, isHazardZoning } from "../lib/zoning";
+    import type { ParcelFeature, ParcelFeatureCollection, LandReport } from "../lib/api";
 
-    let map = null;
-    let geoJsonLayer = null;
-    let selectedLayer = null;
-    let parcelFeatures = [];
+    let map: L.Map | null = null;
+    let geoJsonLayer: L.GeoJSON | null = null;
+    let selectedLayer: L.Layer | null = null;
+    let parcelFeatures: ParcelFeature[] = [];
 
     const mapCounter = document.getElementById('map-counter');
     const emptyState = document.getElementById('inspector-empty');
@@ -177,23 +177,7 @@ import MainLayout from "../layouts/MainLayout.astro";
     const detailRestrictedList = document.getElementById('detail-restricted-list');
     const detailAiExplanation = document.getElementById('detail-ai-explanation');
 
-    function getZoningColor(zoning) {
-      const z = (zoning || '').toLowerCase();
-      if (z.includes('restricted') || z.includes('wetland') || z === 'e' || z === 'r-s') {
-        return '#ef4444'; // Red hazard
-      }
-      if (z.includes('commercial') || z === 'c1') {
-        return '#191a23'; // Dark Positivus
-      }
-      if (z.includes('mixed') || z === 'm') {
-        return '#8b5cf6'; // Purple
-      }
-      return '#b9ff66'; // Green Positivus
-    }
-
     function initMap() {
-      if (typeof L === 'undefined') return;
-
       map = L.map('leaflet-map', { zoomControl: true }).setView([-1.9441, 30.0619], 13);
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -208,16 +192,10 @@ import MainLayout from "../layouts/MainLayout.astro";
       });
     }
 
-    async function fetchParcels(bbox = null) {
+    async function fetchParcels(bbox?: string) {
       if (mapCounter) mapCounter.textContent = '...';
       try {
-        let url = `${API_BASE_URL}/parcels`;
-        if (bbox) url += `?bbox=${bbox}`;
-
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Failed to fetch parcels');
-
-        const data = await res.json();
+        const data = await getParcels(bbox);
         parcelFeatures = data.features || [];
         if (mapCounter) mapCounter.textContent = String(parcelFeatures.length);
 
@@ -228,15 +206,15 @@ import MainLayout from "../layouts/MainLayout.astro";
       }
     }
 
-    function renderGeoJson(data) {
-      if (!map || typeof L === 'undefined') return;
+    function renderGeoJson(data: ParcelFeatureCollection) {
+      if (!map) return;
       if (geoJsonLayer) map.removeLayer(geoJsonLayer);
 
-      geoJsonLayer = L.geoJSON(data, {
+      geoJsonLayer = L.geoJSON(data as GeoJSON.FeatureCollection, {
         style: (feature) => {
           const zoning = feature?.properties?.zoning || 'residential';
           const color = getZoningColor(zoning);
-          const isHazard = color === '#ef4444';
+          const isHazard = isHazardZoning(zoning);
           return {
             color: '#191a23',
             weight: 2,
@@ -252,7 +230,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           layer.on('click', (e) => {
             L.DomEvent.stopPropagation(e);
             highlightLayer(layer);
-            loadReport(feature.properties.id, upi);
+            loadReport(feature.properties.id);
           });
         },
       }).addTo(map);
@@ -262,13 +240,14 @@ import MainLayout from "../layouts/MainLayout.astro";
       }
     }
 
-    function highlightLayer(layer) {
+    function highlightLayer(layer: L.Layer) {
       if (selectedLayer && geoJsonLayer) {
         geoJsonLayer.resetStyle(selectedLayer);
       }
       selectedLayer = layer;
-      if (layer.setStyle) {
-        layer.setStyle({
+      const styledLayer = layer as L.Path;
+      if (styledLayer.setStyle) {
+        styledLayer.setStyle({
           weight: 4,
           color: '#000000',
           fillOpacity: 0.85,
@@ -276,55 +255,43 @@ import MainLayout from "../layouts/MainLayout.astro";
       }
     }
 
-    async function loadReport(parcelId, upi) {
+    async function loadReport(parcelId: string) {
       showState('loading');
       try {
-        const res = await fetch(`${API_BASE_URL}/parcels/${parcelId}/report`);
-        if (!res.ok) throw new Error('Report error');
-        const report = await res.json();
+        const report = await getParcelReport(parcelId);
         displayReport(report);
       } catch (err) {
         console.error('Report error:', err);
-        displayReport({
-          upi: upi,
-          zoning: 'residential',
-          area_m2: 450,
-          allowed_uses: ['Single-family homes', 'Small home offices'],
-          restricted_uses: ['Heavy factories'],
-          ai_explanation: `Parcel ${upi} is registered under standard residential rules. Always confirm official deeds with Kigali Land Authority.`,
-        });
+        showState('empty');
       }
     }
 
-    async function handlePointLookup(lng, lat) {
+    async function handlePointLookup(lng: number, lat: number) {
       try {
-        const res = await fetch(`${API_BASE_URL}/parcels/point?lng=${lng}&lat=${lat}`);
-        if (!res.ok) return;
-        const feature = await res.json();
+        const feature = await getParcelAtPoint(lng, lat);
         if (feature && feature.properties) {
           const id = feature.properties.id;
-          const upi = feature.properties.upi;
 
           if (geoJsonLayer) {
             geoJsonLayer.eachLayer((layer) => {
-              if (layer.feature && layer.feature.properties.id === id) {
+              const layerFeature = (layer as L.Layer & { feature?: ParcelFeature }).feature;
+              if (layerFeature && layerFeature.properties.id === id) {
                 highlightLayer(layer);
               }
             });
           }
-          loadReport(id, upi);
+          loadReport(id);
         }
       } catch (err) {
         console.error('Point lookup error:', err);
       }
     }
 
-    function displayReport(report) {
+    function displayReport(report: LandReport) {
       if (detailUpi) detailUpi.textContent = report.upi || 'N/A';
       if (detailArea) detailArea.textContent = report.area_m2 ? `${Math.round(report.area_m2).toLocaleString()} m²` : 'N/A';
 
-      const z = (report.zoning || 'RESIDENTIAL').toLowerCase();
-      const isHazard = z.includes('restricted') || z.includes('wetland') || z === 'e' || z === 'r-s';
+      const isHazard = isHazardZoning(report.zoning);
 
       if (detailBadge) {
         detailBadge.textContent = (report.zoning || 'RESIDENTIAL').toUpperCase();
@@ -362,7 +329,7 @@ import MainLayout from "../layouts/MainLayout.astro";
       showState('content');
     }
 
-    function showState(st) {
+    function showState(st: 'empty' | 'loading' | 'content') {
       if (emptyState) emptyState.classList.toggle('hidden', st !== 'empty');
       if (loadingState) loadingState.classList.toggle('hidden', st !== 'loading');
       if (contentState) contentState.classList.toggle('hidden', st !== 'content');

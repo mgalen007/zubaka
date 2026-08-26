@@ -6,69 +6,42 @@ import Section from "./Section.astro";
 import c1 from "../../assets/pics/card-pic1.png";
 import c2 from "../../assets/pics/card-pic2.png";
 import c3 from "../../assets/pics/card-pic3.png";
-import c4 from "../../assets/pics/card-pic4.png";
-import c5 from "../../assets/pics/card-pic5.png";
-import c6 from "../../assets/pics/card-pic6.png";
 
 const cards = [
   {
     index: 1,
-    titleTop: "Search Engine",
-    titleBottom: "Optimization",
+    titleTop: "Interactive",
+    titleBottom: "Land Map",
     img: c1,
-    alt: "SEO",
-    link: "https://google.com",
+    alt: "Kigali land map",
+    link: "/map",
   },
   {
     index: 2,
-    titleTop: "Pay-per-click",
-    titleBottom: "advertising",
+    titleTop: "UPI",
+    titleBottom: "Search",
     img: c2,
-    alt: "SEO",
-    link: "https://google.com",
+    alt: "UPI search",
+    link: "/search",
   },
   {
     index: 3,
-    titleTop: "Social Media",
-    titleBottom: "Marketing",
+    titleTop: "Zoning",
+    titleBottom: "Rules",
     img: c3,
-    alt: "SEO",
-    link: "https://google.com",
-  },
-  {
-    index: 1,
-    titleTop: "Email",
-    titleBottom: "Marketing",
-    img: c4,
-    alt: "SEO",
-    link: "https://google.com",
-  },
-  {
-    index: 2,
-    titleTop: "Content",
-    titleBottom: "Creation",
-    img: c5,
-    alt: "SEO",
-    link: "https://google.com",
-  },
-  {
-    index: 3,
-    titleTop: "Analytics and",
-    titleBottom: "Tracking",
-    img: c6,
-    alt: "SEO",
-    link: "https://google.com",
+    alt: "Kigali zoning rules",
+    link: "/services",
   },
 ];
 
 const description =
-  "At our digital marketing agency, we offer a range of services to help businesses grow and succeed online. These services include";
+  "Everything you need to verify a plot's real zoning status before you deal with any land broker.";
 ---
 
 <Section id="services">
   <div class="mt-[140px] mb-5">
-    <SectionTitle sectionTitle="Services" description={description} />
-    <div class="grid lg:grid-cols-2 lg:grid-rows-3 gap-10">
+    <SectionTitle sectionTitle="Verify Before You Buy" description={description} />
+    <div class="grid lg:grid-cols-2 lg:grid-rows-2 gap-10">
       {
         cards.map((card) => (
           <ServiceCard

@@ -1,11 +1,23 @@
 /* empty css                                 */
-import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_DTu46K8G.mjs';
+import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_BvIZ4Gm6.mjs';
 import 'kleur/colors';
-import { $ as $$MainLayout } from '../chunks/MainLayout_DiLATu-x.mjs';
-import { $ as $$Card } from '../chunks/Card_UeNib_T2.mjs';
-import { c as c2, a as c3, b as c4, $ as $$ServiceCard } from '../chunks/card-pic4_B-SL11Od.mjs';
-import { c as c1 } from '../chunks/card-pic1_Blqjnc3Y.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_BsuaeoN8.mjs';
+import { $ as $$Card } from '../chunks/Card_DqsaHV8i.mjs';
+import { c as c1, a as c2, b as c3, $ as $$ServiceCard } from '../chunks/card-pic3_DI2Qybbk.mjs';
 export { renderers } from '../renderers.mjs';
+
+const c4 = new Proxy({"src":"/_astro/card-pic4.CPZGvqT8.png","width":210,"height":194,"format":"png"}, {
+						get(target, name, receiver) {
+							if (name === 'clone') {
+								return structuredClone(target);
+							}
+							if (name === 'fsPath') {
+								return "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/assets/pics/card-pic4.png";
+							}
+							
+							return target[name];
+						}
+					});
 
 const $$Services = createComponent(($$result, $$props, $$slots) => {
   const masterplanServices = [
@@ -63,16 +75,16 @@ Verify UPI Number
 </a> <a href="/map" class="inline-flex items-center px-10 py-5 bg-green text-black rounded-2xl hover:bg-dark hover:text-white transition-all font-medium text-xl border border-black">
 Open Land Map
 </a> </div> </div> ` })} </div> </div> ` })}`;
-}, "C:/Users/HP/OneDrive/Documents/code/work/ideation/zubaka/frontend/src/pages/services.astro", void 0);
+}, "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/services.astro", void 0);
 
-const $$file = "C:/Users/HP/OneDrive/Documents/code/work/ideation/zubaka/frontend/src/pages/services.astro";
+const $$file = "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/services.astro";
 const $$url = "/services";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: $$Services,
-  file: $$file,
-  url: $$url
+	__proto__: null,
+	default: $$Services,
+	file: $$file,
+	url: $$url
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const page = () => _page;

@@ -1,5 +1,5 @@
 ---
-import Form from "../ui/Form.astro";
+import Card from "../ui/Card.astro";
 import SectionTitle from "../ui/SectionTitle.astro";
 import Section from "./Section.astro";
 ---
@@ -7,9 +7,17 @@ import Section from "./Section.astro";
 <Section id="contact">
   <div class="mb-[140px] relative">
     <SectionTitle
-      sectionTitle="Contact Us"
-      description="Connect with Us: Let's Discuss Your Digital Marketing Needs"
+      sectionTitle="Report a Suspicious Broker"
+      description="Think someone tried to sell you land under false zoning claims? Let us know."
     />
-    <Form />
+    <Card isUnderline={true}>
+      <div class="bg-[#F3F3F3] rounded-[45px] p-[60px] flex flex-col items-center text-center gap-6">
+        <p class="max-w-xl">
+          Zubaka is currently a demo built on 17 mock Kigali parcels — there's no live reporting
+          line yet. In a production version, this section would let you flag a broker or plot
+          directly to the Rwanda Land Authority.
+        </p>
+      </div>
+    </Card>
   </div>
 </Section>

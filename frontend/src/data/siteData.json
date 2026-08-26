@@ -1,8 +1,8 @@
 {
-  "title": "Positivus",
-  "description": "Positivus is a simple and minimalistic blog theme for Ghost. It is designed to be a perfect starting point for your blog project.",
+  "title": "Zubaka",
+  "description": "Verify any Kigali land parcel's real Masterplan zoning before you buy — protecting buyers from informal broker fraud.",
   "image": {
-    "src": "https://github.com/manulthanura/Positivus/raw/main/public/cover.png",
-    "alt": "Positivus"
+    "src": "/cover.png",
+    "alt": "Zubaka — Kigali Land Use Masterplan & Zoning Protection Platform"
   }
 }

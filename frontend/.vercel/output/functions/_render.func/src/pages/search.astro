@@ -25,7 +25,7 @@ import MainLayout from "../layouts/MainLayout.astro";
               <input
                 type="text"
                 id="upi-search-input"
-                placeholder="Enter UPI Number (e.g., 1/02/03/04/1001 or UPI-001)..."
+                placeholder="Enter UPI Number (e.g., 1/01/03/01/05/0001)..."
                 class="w-full border-2 border-black rounded-2xl px-6 py-5 font-grotesk text-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-green shadow-[0px_3px_0px_#191a23]"
               />
             </div>
@@ -41,14 +41,14 @@ import MainLayout from "../layouts/MainLayout.astro";
           <div class="flex items-center gap-3 flex-wrap">
             <span class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Try Demo UPIs:</span>
             <div id="sample-upi-list" class="flex gap-2 flex-wrap">
-              <button data-upi="1/02/03/04/1001" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
-                1/02/03/04/1001
+              <button data-upi="1/01/03/01/05/0001" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
+                1/01/03/01/05/0001
               </button>
-              <button data-upi="UPI-001" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
-                UPI-001
+              <button data-upi="1/01/03/03/02/0002" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
+                1/01/03/03/02/0002
               </button>
-              <button data-upi="UPI-002" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
-                UPI-002
+              <button data-upi="1/01/03/02/01/0004" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
+                1/01/03/02/01/0004
               </button>
             </div>
           </div>
@@ -152,11 +152,13 @@ import MainLayout from "../layouts/MainLayout.astro";
     </div>
   </Section>
 
-  <script is:inline>
-    const API_BASE_URL = 'http://localhost:8000/api/v1';
+  <script>
+    import { getLandReportByUpi } from "../lib/api";
+    import { isHazardZoning } from "../lib/zoning";
+    import type { LandReport } from "../lib/api";
 
     const searchForm = document.getElementById('upi-search-form');
-    const searchInput = document.getElementById('upi-search-input');
+    const searchInput = document.getElementById('upi-search-input') as HTMLInputElement | null;
 
     const resultPrompt = document.getElementById('result-prompt');
     const resultLoading = document.getElementById('result-loading');
@@ -172,34 +174,22 @@ import MainLayout from "../layouts/MainLayout.astro";
     const reportRestrictedUl = document.getElementById('report-restricted-ul');
     const reportAiText = document.getElementById('report-ai-text');
 
-    async function searchUpi(upi) {
+    async function searchUpi(upi: string) {
       showState('loading');
       try {
-        const res = await fetch(`${API_BASE_URL}/land/report/${encodeURIComponent(upi)}`);
-        if (!res.ok) throw new Error('UPI search failed');
-
-        const report = await res.json();
+        const report = await getLandReportByUpi(upi);
         renderReport(report);
       } catch (err) {
         console.error('Search error:', err);
-        // Fallback demo report for quick testing
-        renderReport({
-          upi: upi,
-          zoning: 'residential',
-          area_m2: 520,
-          allowed_uses: ['Single-family residential housing', 'Private gardens', 'Home office space'],
-          restricted_uses: ['Industrial factories', 'High-rise commercial shopping malls'],
-          ai_explanation: `Parcel ${upi} is registered under single-family residential zoning rules. Ensure you obtain structural approvals before starting construction.`,
-        });
+        showState('prompt');
       }
     }
 
-    function renderReport(report) {
+    function renderReport(report: LandReport) {
       if (reportUpiTitle) reportUpiTitle.textContent = report.upi || 'N/A';
       if (reportAreaBadge) reportAreaBadge.textContent = report.area_m2 ? `${Math.round(report.area_m2).toLocaleString()} m²` : 'N/A';
 
-      const z = (report.zoning || 'RESIDENTIAL').toLowerCase();
-      const isHazard = z.includes('restricted') || z.includes('wetland') || z === 'e' || z === 'r-s';
+      const isHazard = isHazardZoning(report.zoning);
 
       if (reportZoningBadge) {
         reportZoningBadge.textContent = report.zoning.toUpperCase();
@@ -237,7 +227,7 @@ import MainLayout from "../layouts/MainLayout.astro";
       showState('report');
     }
 
-    function showState(st) {
+    function showState(st: 'prompt' | 'loading' | 'report') {
       if (resultPrompt) resultPrompt.classList.toggle('hidden', st !== 'prompt');
       if (resultLoading) resultLoading.classList.toggle('hidden', st !== 'loading');
       if (resultReport) resultReport.classList.toggle('hidden', st !== 'report');
@@ -254,7 +244,7 @@ import MainLayout from "../layouts/MainLayout.astro";
 
       document.querySelectorAll('.chip-search').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          const upiVal = e.currentTarget.getAttribute('data-upi');
+          const upiVal = (e.currentTarget as HTMLElement).getAttribute('data-upi');
           if (upiVal) {
             if (searchInput) searchInput.value = upiVal;
             searchUpi(upiVal);
