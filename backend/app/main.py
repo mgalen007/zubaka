@@ -5,6 +5,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.auth import router as auth_router
+from app.api.v1.land import router as land_router
 from app.api.v1.parcels import router as parcels_router
 from app.core.config import get_settings
 from app.core.database import get_db
@@ -13,6 +14,7 @@ settings = get_settings()
 app = FastAPI(title=settings.app_name)
 
 app.include_router(parcels_router, prefix="/api/v1")
+app.include_router(land_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 
 
