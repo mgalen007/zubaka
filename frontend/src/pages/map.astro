@@ -329,9 +329,10 @@ import MainLayout from "../layouts/MainLayout.astro";
       showState('content');
     }
 
-    function showState(st: 'empty' | 'loading' | 'content') {
+    function showState(st: 'empty' | 'loading' | 'error' | 'content') {
       if (emptyState) emptyState.classList.toggle('hidden', st !== 'empty');
       if (loadingState) loadingState.classList.toggle('hidden', st !== 'loading');
+      if (errorState) errorState.classList.toggle('hidden', st !== 'error');
       if (contentState) contentState.classList.toggle('hidden', st !== 'content');
     }
 
@@ -344,6 +345,13 @@ import MainLayout from "../layouts/MainLayout.astro";
           if (!map) return;
           const bounds = map.getBounds();
           fetchParcels(`${bounds.getWest()},${bounds.getSouth()},${bounds.getEast()},${bounds.getNorth()}`);
+        });
+      }
+
+      const retryBtn = document.getElementById('btn-map-error-retry');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+          fetchParcels(lastBbox);
         });
       }
 
