@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
 
-    cors_origins: list[str] = ["http://localhost:4321"]
+    cors_origins: list[str] = ["http://localhost:4321", "http://127.0.0.1:4321"]
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=False
