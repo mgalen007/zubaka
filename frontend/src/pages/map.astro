@@ -7,48 +7,62 @@ import MainLayout from "../layouts/MainLayout.astro";
 
 <MainLayout
   title="Interactive Kigali Land Map — Zubaka"
-  description="View real-time PostGIS parcel geometries, viewport-aware bounding box zoning, and point-in-polygon land compliance across Kigali."
+  description="Browse real plots of land across Kigali on a map, and check each one's official zoning before you buy."
 >
   <Section>
     <div class="py-6">
       <SectionTitle
         sectionTitle="Interactive Land Map"
-        description="Inspect real-time GeoJSON parcel boundaries, view Kigali Masterplan zoning classifications, and click any plot to view allowed construction permissions."
+        description="Browse plots on the map, see their official Kigali Masterplan zoning, and check what's allowed to be built there before you pay anyone."
       />
 
       <Card isUnderline={true}>
         <div class="p-6 sm:p-10 bg-white rounded-[45px] flex flex-col space-y-8 font-grotesk">
-          
+
           <!-- Map Canvas & Inspector Grid -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             <!-- Map Column (7 cols) -->
             <div class="lg:col-span-7 flex flex-col space-y-3">
               <div class="relative w-full rounded-[30px] border-2 border-black shadow-[0px_5px_0px_#191a23] overflow-hidden bg-zinc-100">
                 <div id="leaflet-map" class="w-full h-[540px] z-10"></div>
 
-                <!-- Bounding box button -->
+                <!-- Tile loading indicator -->
+                <div id="map-tile-loading" class="hidden absolute top-4 left-4 z-20 px-3 py-1.5 bg-white text-black text-xs rounded-xl border border-black shadow-[0px_2px_0px_#191a23]">
+                  Loading map...
+                </div>
+
+                <!-- Refresh area button -->
                 <button
                   id="btn-bbox-refresh"
                   class="absolute bottom-4 left-4 z-20 px-4 py-2 bg-white hover:bg-black text-black hover:text-white border-2 border-black rounded-xl text-xs font-medium shadow-[0px_2px_0px_#191a23] transition-colors"
                 >
-                  Refresh Viewport Bounding Box
+                  Refresh This Area
                 </button>
 
-                <!-- Count Badge -->
-                <div class="absolute top-4 right-4 z-20 px-3.5 py-1.5 bg-black text-white text-xs font-mono rounded-xl border border-black">
-                  Parcels Loaded: <span id="map-counter">0</span>
+                <!-- Status Badge -->
+                <div class="absolute top-4 right-4 z-20 px-3.5 py-1.5 bg-black text-white text-xs rounded-xl border border-black">
+                  <span id="map-counter">Loading plots...</span>
                 </div>
               </div>
+
+              <!-- Fetch error banner -->
+              <div id="map-error-banner" class="hidden p-3 rounded-xl border-2 border-black bg-rose-100 text-xs text-black flex items-center justify-between gap-3">
+                <span>Couldn't load plots right now — check your connection and try again.</span>
+                <button id="btn-map-error-retry" class="shrink-0 px-3 py-1.5 bg-black text-white rounded-lg text-xs font-medium hover:bg-rose-600 transition-colors">
+                  Retry
+                </button>
+              </div>
+
               <p class="text-xs text-zinc-500 italic">
-                * Click any polygon on the map or click any coordinate for point-in-polygon lookup via <code>/api/v1/parcels/point</code>.
+                * Click anywhere on the map to check that spot, or click a plot outline for its full report.
               </p>
             </div>
 
             <!-- Inspector Drawer Column (5 cols) -->
             <div class="lg:col-span-5 w-full">
               <div class="rounded-[35px] border-2 border-black shadow-[0px_5px_0px_#191a23] bg-[#f3f3f3] p-6 sm:p-8 flex flex-col space-y-5">
-                
+
                 <!-- Empty State -->
                 <div id="inspector-empty" class="py-16 text-center flex flex-col items-center space-y-3">
                   <div class="w-16 h-16 rounded-2xl bg-green border-2 border-black flex items-center justify-center text-black shadow-[0px_3px_0px_#191a23]">
@@ -57,9 +71,9 @@ import MainLayout from "../layouts/MainLayout.astro";
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
                   </div>
-                  <h3 class="text-xl font-medium text-black">Select a Parcel on the Map</h3>
+                  <h3 class="text-xl font-medium text-black">Select a Plot on the Map</h3>
                   <p class="text-sm text-zinc-600 max-w-xs">
-                    Click any parcel polygon to trigger <code>GET /api/v1/parcels/&#123;id&#125;/report</code> and load AI land analysis.
+                    Click any plot outline to see its zoning, allowed uses, and a plain-language safety report.
                   </p>
 
                 </div>
@@ -67,12 +81,25 @@ import MainLayout from "../layouts/MainLayout.astro";
                 <!-- Loading State -->
                 <div id="inspector-loading" class="hidden py-20 text-center">
                   <div class="w-10 h-10 border-4 border-black border-t-green rounded-full animate-spin mx-auto mb-3"></div>
-                  <p class="text-sm font-medium text-black">Fetching Land Report from FastAPI...</p>
+                  <p class="text-sm font-medium text-black">Checking this plot...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="inspector-error" class="hidden py-16 text-center flex flex-col items-center space-y-3">
+                  <div class="w-16 h-16 rounded-2xl bg-rose-100 border-2 border-black flex items-center justify-center text-black shadow-[0px_3px_0px_#191a23]">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-xl font-medium text-black">No Report Available</h3>
+                  <p id="inspector-error-text" class="text-sm text-zinc-600 max-w-xs">
+                    We couldn't find a report for that spot. Try clicking directly on a plot outline.
+                  </p>
                 </div>
 
                 <!-- Active Content -->
                 <div id="inspector-content" class="hidden flex flex-col space-y-5">
-                  
+
                   <div class="flex items-center justify-between">
                     <span id="detail-badge" class="greenhead text-sm font-medium">
                       RESIDENTIAL
@@ -161,10 +188,15 @@ import MainLayout from "../layouts/MainLayout.astro";
     let geoJsonLayer: L.GeoJSON | null = null;
     let selectedLayer: L.Layer | null = null;
     let parcelFeatures: ParcelFeature[] = [];
+    let lastBbox: string | undefined;
 
     const mapCounter = document.getElementById('map-counter');
+    const tileLoadingBadge = document.getElementById('map-tile-loading');
+    const mapErrorBanner = document.getElementById('map-error-banner');
     const emptyState = document.getElementById('inspector-empty');
     const loadingState = document.getElementById('inspector-loading');
+    const errorState = document.getElementById('inspector-error');
+    const errorStateText = document.getElementById('inspector-error-text');
     const contentState = document.getElementById('inspector-content');
 
     const detailUpi = document.getElementById('detail-upi');
@@ -180,10 +212,17 @@ import MainLayout from "../layouts/MainLayout.astro";
     function initMap() {
       map = L.map('leaflet-map', { zoomControl: true }).setView([-1.9441, 30.0619], 13);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 19,
       }).addTo(map);
+
+      tiles.on('loading', () => {
+        if (tileLoadingBadge) tileLoadingBadge.classList.remove('hidden');
+      });
+      tiles.on('load', () => {
+        if (tileLoadingBadge) tileLoadingBadge.classList.add('hidden');
+      });
 
       fetchParcels();
 
@@ -193,16 +232,23 @@ import MainLayout from "../layouts/MainLayout.astro";
     }
 
     async function fetchParcels(bbox?: string) {
-      if (mapCounter) mapCounter.textContent = '...';
+      lastBbox = bbox;
+      if (mapCounter) mapCounter.textContent = 'Loading plots...';
+      if (mapErrorBanner) mapErrorBanner.classList.add('hidden');
       try {
         const data = await getParcels(bbox);
         parcelFeatures = data.features || [];
-        if (mapCounter) mapCounter.textContent = String(parcelFeatures.length);
+        if (mapCounter) {
+          mapCounter.textContent = parcelFeatures.length === 1
+            ? '1 plot in this area'
+            : `${parcelFeatures.length} plots in this area`;
+        }
 
         renderGeoJson(data);
       } catch (err) {
         console.error('Error fetching parcels:', err);
-        if (mapCounter) mapCounter.textContent = 'Offline';
+        if (mapCounter) mapCounter.textContent = 'Couldn\'t load plots';
+        if (mapErrorBanner) mapErrorBanner.classList.remove('hidden');
       }
     }
 
@@ -262,11 +308,13 @@ import MainLayout from "../layouts/MainLayout.astro";
         displayReport(report);
       } catch (err) {
         console.error('Report error:', err);
-        showState('empty');
+        if (errorStateText) errorStateText.textContent = 'We couldn\'t load a report for that plot. Please try again.';
+        showState('error');
       }
     }
 
     async function handlePointLookup(lng: number, lat: number) {
+      showState('loading');
       try {
         const feature = await getParcelAtPoint(lng, lat);
         if (feature && feature.properties) {
@@ -281,9 +329,14 @@ import MainLayout from "../layouts/MainLayout.astro";
             });
           }
           loadReport(id);
+        } else {
+          if (errorStateText) errorStateText.textContent = 'No plot found at that spot. Try clicking directly on a plot outline.';
+          showState('error');
         }
       } catch (err) {
         console.error('Point lookup error:', err);
+        if (errorStateText) errorStateText.textContent = 'Something went wrong checking that spot. Please try again.';
+        showState('error');
       }
     }
 
