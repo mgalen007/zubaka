@@ -1,11 +1,9 @@
 ---
 import { Image } from "astro:assets";
 import Card from "./Card.astro";
+import Icon from "./Icon.astro";
 
-import gob from "../../assets/icon6.svg";
-import wob from "../../assets/icon7.svg";
-
-/* 
+/*
 1. Gray card with green title and green on black icon 
 2. Green card with gray title and green on black icon
 3. Black card with gray title and gray on black icon
@@ -37,7 +35,9 @@ const { index, titleTop, titleBottom, img, alt, link } = Astro.props;
     </picture>
     <div class="flex items-end">
       <a href={link} class="flex items-center gap-3.5"
-        ><Image src={index === 1 || index === 2 ? gob : wob} alt={alt} />
+        ><div class={`w-[41px] h-[41px] rounded-full flex items-center justify-center shrink-0 ${index === 1 || index === 2 ? 'bg-dark text-green' : 'bg-white text-black'}`}>
+          <Icon name="arrow-up-right" class="w-5 h-5" />
+        </div>
         <span class="hidden sm:block">Service Info</span></a
       >
     </div>

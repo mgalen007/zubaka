@@ -3,6 +3,7 @@ import Card from "../components/ui/Card.astro";
 import SectionTitle from "../components/ui/SectionTitle.astro";
 import Section from "../components/sections/Section.astro";
 import MainLayout from "../layouts/MainLayout.astro";
+import Icon from "../components/ui/Icon.astro";
 ---
 
 <MainLayout
@@ -99,8 +100,10 @@ import MainLayout from "../layouts/MainLayout.astro";
 
               <!-- Risk Warning Card -->
               <div id="report-risk-card" class="p-5 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]">
-                <h4 id="report-risk-heading" class="text-lg font-medium text-black mb-1">
-                  Compliance Status
+                <h4 class="text-lg font-medium text-black mb-1 flex items-center gap-2">
+                  <Icon name="warning" id="report-risk-icon-warning" class="w-5 h-5 hidden shrink-0" />
+                  <Icon name="check-circle" id="report-risk-icon-ok" class="w-5 h-5 shrink-0" />
+                  <span id="report-risk-heading">Compliance Status</span>
                 </h4>
                 <p id="report-risk-body" class="text-sm text-zinc-700 leading-relaxed">
                   Zoning report loaded...
@@ -134,8 +137,9 @@ import MainLayout from "../layouts/MainLayout.astro";
 
               <!-- AI Grounded Advisory -->
               <div class="bg-green p-6 rounded-2xl border-2 border-black shadow-[0px_4px_0px_#191a23]">
-                <h4 class="text-sm font-bold uppercase tracking-wider text-black mb-2">
-                  💡 AI Land Protection Advisory
+                <h4 class="text-sm font-bold uppercase tracking-wider text-black mb-2 flex items-center gap-1.5">
+                  <Icon name="lightbulb" class="w-4 h-4" />
+                  AI Land Protection Advisory
                 </h4>
                 <p id="report-ai-text" class="text-sm text-black leading-relaxed font-normal">
                   AI explanation text...
@@ -178,6 +182,8 @@ import MainLayout from "../layouts/MainLayout.astro";
     const reportAreaBadge = document.getElementById('report-area-badge');
     const reportRiskCard = document.getElementById('report-risk-card');
     const reportRiskHeading = document.getElementById('report-risk-heading');
+    const reportRiskIconWarning = document.getElementById('report-risk-icon-warning');
+    const reportRiskIconOk = document.getElementById('report-risk-icon-ok');
     const reportRiskBody = document.getElementById('report-risk-body');
     const reportAllowedUl = document.getElementById('report-allowed-ul');
     const reportRestrictedUl = document.getElementById('report-restricted-ul');
@@ -210,12 +216,16 @@ import MainLayout from "../layouts/MainLayout.astro";
       if (reportRiskCard && reportRiskHeading && reportRiskBody) {
         if (isHazard) {
           reportRiskCard.className = 'p-5 rounded-2xl border-2 border-black bg-rose-100 shadow-[0px_3px_0px_#191a23]';
-          reportRiskHeading.textContent = '⚠️ DEMOLITION HAZARD WARNING';
+          reportRiskHeading.textContent = 'DEMOLITION HAZARD WARNING';
           reportRiskBody.textContent = 'Plot is located in a restricted buffer or wetland area. Unauthorized structures will be demolished by municipal authorities.';
+          reportRiskIconWarning?.classList.remove('hidden');
+          reportRiskIconOk?.classList.add('hidden');
         } else {
           reportRiskCard.className = 'p-5 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]';
-          reportRiskHeading.textContent = '✅ Approved Masterplan Zoning';
+          reportRiskHeading.textContent = 'Approved Masterplan Zoning';
           reportRiskBody.textContent = 'Permitted for single-family or mixed residential construction under Kigali City rules.';
+          reportRiskIconWarning?.classList.add('hidden');
+          reportRiskIconOk?.classList.remove('hidden');
         }
       }
 

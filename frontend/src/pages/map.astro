@@ -3,6 +3,7 @@ import Card from "../components/ui/Card.astro";
 import SectionTitle from "../components/ui/SectionTitle.astro";
 import Section from "../components/sections/Section.astro";
 import MainLayout from "../layouts/MainLayout.astro";
+import Icon from "../components/ui/Icon.astro";
 ---
 
 <MainLayout
@@ -66,10 +67,7 @@ import MainLayout from "../layouts/MainLayout.astro";
                 <!-- Empty State -->
                 <div id="inspector-empty" class="py-16 text-center flex flex-col items-center space-y-3">
                   <div class="w-16 h-16 rounded-2xl bg-green border-2 border-black flex items-center justify-center text-black shadow-[0px_3px_0px_#191a23]">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
+                    <Icon name="map-pin" class="w-8 h-8" />
                   </div>
                   <h3 class="text-xl font-medium text-black">Select a Plot on the Map</h3>
                   <p class="text-sm text-zinc-600 max-w-xs">
@@ -87,9 +85,7 @@ import MainLayout from "../layouts/MainLayout.astro";
                 <!-- Error State -->
                 <div id="inspector-error" class="hidden py-16 text-center flex flex-col items-center space-y-3">
                   <div class="w-16 h-16 rounded-2xl bg-rose-100 border-2 border-black flex items-center justify-center text-black shadow-[0px_3px_0px_#191a23]">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"></path>
-                    </svg>
+                    <Icon name="warning-circle" class="w-8 h-8" />
                   </div>
                   <h3 class="text-xl font-medium text-black">No Report Available</h3>
                   <p id="inspector-error-text" class="text-sm text-zinc-600 max-w-xs">
@@ -118,8 +114,10 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                   <!-- Risk Notice -->
                   <div id="detail-risk-card" class="p-4 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]">
-                    <h4 id="detail-risk-title" class="text-base font-medium text-black mb-1">
-                      Compliance Status
+                    <h4 class="text-base font-medium text-black mb-1 flex items-center gap-1.5">
+                      <Icon name="warning" id="detail-risk-icon-warning" class="w-4 h-4 hidden shrink-0" />
+                      <Icon name="check-circle" id="detail-risk-icon-ok" class="w-4 h-4 shrink-0" />
+                      <span id="detail-risk-title">Compliance Status</span>
                     </h4>
                     <p id="detail-risk-text" class="text-xs text-zinc-700 leading-relaxed">
                       Evaluation loaded...
@@ -150,8 +148,9 @@ import MainLayout from "../layouts/MainLayout.astro";
 
                   <!-- AI Protection Advisory -->
                   <div class="bg-green p-4 rounded-2xl border-2 border-black shadow-[0px_3px_0px_#191a23]">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-black mb-1 flex items-center gap-1">
-                      💡 AI Land Protection Advisory
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-black mb-1 flex items-center gap-1.5">
+                      <Icon name="lightbulb" class="w-3.5 h-3.5" />
+                      AI Land Protection Advisory
                     </h4>
                     <p id="detail-ai-explanation" class="text-xs text-black leading-relaxed font-normal">
                       Generating explanation...
@@ -204,6 +203,8 @@ import MainLayout from "../layouts/MainLayout.astro";
     const detailArea = document.getElementById('detail-area');
     const detailRiskCard = document.getElementById('detail-risk-card');
     const detailRiskTitle = document.getElementById('detail-risk-title');
+    const detailRiskIconWarning = document.getElementById('detail-risk-icon-warning');
+    const detailRiskIconOk = document.getElementById('detail-risk-icon-ok');
     const detailRiskText = document.getElementById('detail-risk-text');
     const detailAllowedList = document.getElementById('detail-allowed-list');
     const detailRestrictedList = document.getElementById('detail-restricted-list');
@@ -356,12 +357,16 @@ import MainLayout from "../layouts/MainLayout.astro";
       if (detailRiskCard && detailRiskTitle && detailRiskText) {
         if (isHazard) {
           detailRiskCard.className = 'p-4 rounded-2xl border-2 border-black bg-rose-100 shadow-[0px_3px_0px_#191a23]';
-          detailRiskTitle.textContent = '⚠️ DEMOLITION HAZARD WARNING';
+          detailRiskTitle.textContent = 'DEMOLITION HAZARD WARNING';
           detailRiskText.textContent = 'This plot is in a restricted wetland or hazard buffer. Unpermitted construction is subject to immediate municipal demolition.';
+          detailRiskIconWarning?.classList.remove('hidden');
+          detailRiskIconOk?.classList.add('hidden');
         } else {
           detailRiskCard.className = 'p-4 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]';
-          detailRiskTitle.textContent = '✅ Approved Masterplan Zoning';
+          detailRiskTitle.textContent = 'Approved Masterplan Zoning';
           detailRiskText.textContent = 'Permitted for residential or mixed construction in compliance with Kigali City guidelines.';
+          detailRiskIconWarning?.classList.add('hidden');
+          detailRiskIconOk?.classList.remove('hidden');
         }
       }
 
