@@ -4,8 +4,7 @@ Zubaka helps prospective land buyers in Kigali verify a plot's real Masterplan z
 dealing with informal brokers. This is the Astro + Tailwind frontend, built on top of the
 `backend/` FastAPI + PostGIS API — see the repository root `CLAUDE.md` for the full-stack overview.
 
-Originally scaffolded from the "Positivus" Astro theme; most sections have since been rebuilt
-around the real product (interactive land map, UPI search, zoning rules, AI assistant).
+Built around the real product (interactive land map, UPI search, zoning rules, AI assistant).
 
 ## 🚀 Project Structure
 
