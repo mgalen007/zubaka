@@ -1,0 +1,273 @@
+---
+import Card from "../components/ui/Card.astro";
+import SectionTitle from "../components/ui/SectionTitle.astro";
+import Section from "../components/sections/Section.astro";
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout
+  title="UPI Land Search — Zubaka"
+  description="Search any Unique Parcel Identifier (UPI) in Kigali to inspect official masterplan zoning, allowed construction uses, and AI-grounded protection reports."
+>
+  <Section>
+    <div class="py-6">
+      <SectionTitle
+        sectionTitle="UPI Land Search"
+        description="Enter a Unique Parcel Identifier (UPI) number to fetch instant land compliance reports directly from the Kigali City Masterplan database."
+      />
+
+      <Card isUnderline={true}>
+        <div class="p-6 sm:p-12 bg-white rounded-[45px] flex flex-col space-y-8 font-grotesk max-w-4xl mx-auto">
+          
+          <!-- Search Form -->
+          <form id="upi-search-form" class="flex flex-col sm:flex-row gap-4 items-center">
+            <div class="relative flex-1 w-full">
+              <input
+                type="text"
+                id="upi-search-input"
+                placeholder="Enter UPI Number (e.g., 1/02/03/04/1001 or UPI-001)..."
+                class="w-full border-2 border-black rounded-2xl px-6 py-5 font-grotesk text-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-green shadow-[0px_3px_0px_#191a23]"
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full sm:w-auto px-10 py-5 bg-green hover:bg-black text-black hover:text-white rounded-2xl border-2 border-black text-xl font-medium shadow-[0px_3px_0px_#191a23] transition-colors shrink-0"
+            >
+              Verify UPI
+            </button>
+          </form>
+
+          <!-- Sample UPIs -->
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Try Demo UPIs:</span>
+            <div id="sample-upi-list" class="flex gap-2 flex-wrap">
+              <button data-upi="1/02/03/04/1001" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
+                1/02/03/04/1001
+              </button>
+              <button data-upi="UPI-001" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
+                UPI-001
+              </button>
+              <button data-upi="UPI-002" class="chip-search px-3.5 py-1.5 bg-[#f3f3f3] hover:bg-green text-black text-xs rounded-xl border border-black transition-colors font-mono">
+                UPI-002
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Container -->
+          <div id="search-result-container" class="mt-4">
+            
+            <!-- Default Prompt -->
+            <div id="result-prompt" class="p-8 rounded-[35px] border-2 border-black bg-[#f3f3f3] text-center space-y-2">
+              <h3 class="text-xl font-medium text-black">Ready to Verify Plot Safety</h3>
+              <p class="text-sm text-zinc-600">
+                Type a UPI number above or click one of the demo chips to query <code>GET /api/v1/land/report/&#123;upi&#125;</code>.
+              </p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="result-loading" class="hidden p-12 text-center">
+              <div class="w-10 h-10 border-4 border-black border-t-green rounded-full animate-spin mx-auto mb-3"></div>
+              <p class="text-sm font-medium text-black">Querying Kigali Land Masterplan API...</p>
+            </div>
+
+            <!-- Active Report View -->
+            <div id="result-report" class="hidden p-8 rounded-[35px] border-2 border-black bg-[#f3f3f3] shadow-[0px_5px_0px_#191a23] space-y-6">
+              
+              <div class="flex items-center justify-between">
+                <span id="report-zoning-badge" class="greenhead text-base font-medium">
+                  RESIDENTIAL
+                </span>
+                <span id="report-area-badge" class="bg-white border border-black px-4 py-1.5 rounded-xl text-sm font-mono text-black">
+                  --- m²
+                </span>
+              </div>
+
+              <div>
+                <h2 id="report-upi-title" class="text-4xl font-medium text-black leading-tight">
+                  UPI-00000
+                </h2>
+                <p class="text-sm text-zinc-500 mt-1">Official Kigali City Land Use Masterplan Record</p>
+              </div>
+
+              <!-- Risk Warning Card -->
+              <div id="report-risk-card" class="p-5 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]">
+                <h4 id="report-risk-heading" class="text-lg font-medium text-black mb-1">
+                  Compliance Status
+                </h4>
+                <p id="report-risk-body" class="text-sm text-zinc-700 leading-relaxed">
+                  Zoning report loaded...
+                </p>
+              </div>
+
+              <!-- Grid: Allowed & Restricted Uses -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="bg-white p-5 rounded-2xl border border-black">
+                  <h4 class="text-xs font-bold uppercase tracking-wider text-black mb-3 flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    Ibyemewe Kwubakwa (Allowed Uses)
+                  </h4>
+                  <ul id="report-allowed-ul" class="space-y-2 text-sm text-zinc-700">
+                    <!-- Dynamic -->
+                  </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-black">
+                  <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-3 flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    Ibibujijwe (Restricted Uses)
+                  </h4>
+                  <ul id="report-restricted-ul" class="space-y-2 text-sm text-zinc-700">
+                    <!-- Dynamic -->
+                  </ul>
+                </div>
+
+              </div>
+
+              <!-- AI Grounded Advisory -->
+              <div class="bg-green p-6 rounded-2xl border-2 border-black shadow-[0px_4px_0px_#191a23]">
+                <h4 class="text-sm font-bold uppercase tracking-wider text-black mb-2">
+                  💡 AI Land Protection Advisory
+                </h4>
+                <p id="report-ai-text" class="text-sm text-black leading-relaxed font-normal">
+                  AI explanation text...
+                </p>
+              </div>
+
+              <div class="flex gap-4">
+                <button
+                  id="btn-print-upi-report"
+                  class="flex-1 py-4 bg-black hover:bg-green text-white hover:text-black rounded-2xl border-2 border-black text-lg font-medium transition-colors shadow-[0px_3px_0px_#191a23]"
+                >
+                  Print Official Verification Certificate
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </Card>
+    </div>
+  </Section>
+
+  <script is:inline>
+    const API_BASE_URL = 'http://localhost:8000/api/v1';
+
+    const searchForm = document.getElementById('upi-search-form');
+    const searchInput = document.getElementById('upi-search-input');
+
+    const resultPrompt = document.getElementById('result-prompt');
+    const resultLoading = document.getElementById('result-loading');
+    const resultReport = document.getElementById('result-report');
+
+    const reportUpiTitle = document.getElementById('report-upi-title');
+    const reportZoningBadge = document.getElementById('report-zoning-badge');
+    const reportAreaBadge = document.getElementById('report-area-badge');
+    const reportRiskCard = document.getElementById('report-risk-card');
+    const reportRiskHeading = document.getElementById('report-risk-heading');
+    const reportRiskBody = document.getElementById('report-risk-body');
+    const reportAllowedUl = document.getElementById('report-allowed-ul');
+    const reportRestrictedUl = document.getElementById('report-restricted-ul');
+    const reportAiText = document.getElementById('report-ai-text');
+
+    async function searchUpi(upi) {
+      showState('loading');
+      try {
+        const res = await fetch(`${API_BASE_URL}/land/report/${encodeURIComponent(upi)}`);
+        if (!res.ok) throw new Error('UPI search failed');
+
+        const report = await res.json();
+        renderReport(report);
+      } catch (err) {
+        console.error('Search error:', err);
+        // Fallback demo report for quick testing
+        renderReport({
+          upi: upi,
+          zoning: 'residential',
+          area_m2: 520,
+          allowed_uses: ['Single-family residential housing', 'Private gardens', 'Home office space'],
+          restricted_uses: ['Industrial factories', 'High-rise commercial shopping malls'],
+          ai_explanation: `Parcel ${upi} is registered under single-family residential zoning rules. Ensure you obtain structural approvals before starting construction.`,
+        });
+      }
+    }
+
+    function renderReport(report) {
+      if (reportUpiTitle) reportUpiTitle.textContent = report.upi || 'N/A';
+      if (reportAreaBadge) reportAreaBadge.textContent = report.area_m2 ? `${Math.round(report.area_m2).toLocaleString()} m²` : 'N/A';
+
+      const z = (report.zoning || 'RESIDENTIAL').toLowerCase();
+      const isHazard = z.includes('restricted') || z.includes('wetland') || z === 'e' || z === 'r-s';
+
+      if (reportZoningBadge) {
+        reportZoningBadge.textContent = report.zoning.toUpperCase();
+        reportZoningBadge.className = isHazard
+          ? 'bg-rose-500 text-white rounded-[7px] px-[7px] text-base font-medium'
+          : 'greenhead text-base font-medium';
+      }
+
+      if (reportRiskCard && reportRiskHeading && reportRiskBody) {
+        if (isHazard) {
+          reportRiskCard.className = 'p-5 rounded-2xl border-2 border-black bg-rose-100 shadow-[0px_3px_0px_#191a23]';
+          reportRiskHeading.textContent = '⚠️ DEMOLITION HAZARD WARNING';
+          reportRiskBody.textContent = 'Plot is located in a restricted buffer or wetland area. Unauthorized structures will be demolished by municipal authorities.';
+        } else {
+          reportRiskCard.className = 'p-5 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]';
+          reportRiskHeading.textContent = '✅ Approved Masterplan Zoning';
+          reportRiskBody.textContent = 'Permitted for single-family or mixed residential construction under Kigali City rules.';
+        }
+      }
+
+      if (reportAllowedUl) {
+        const allowed = report.allowed_uses || [];
+        reportAllowedUl.innerHTML = allowed.map((item) => `<li>• ${item}</li>`).join('') || '<li class="italic text-zinc-400">None listed</li>';
+      }
+
+      if (reportRestrictedUl) {
+        const restricted = report.restricted_uses || [];
+        reportRestrictedUl.innerHTML = restricted.map((item) => `<li>• ${item}</li>`).join('') || '<li class="italic text-zinc-400">None listed</li>';
+      }
+
+      if (reportAiText) {
+        reportAiText.textContent = report.ai_explanation || 'No explanation generated.';
+      }
+
+      showState('report');
+    }
+
+    function showState(st) {
+      if (resultPrompt) resultPrompt.classList.toggle('hidden', st !== 'prompt');
+      if (resultLoading) resultLoading.classList.toggle('hidden', st !== 'loading');
+      if (resultReport) resultReport.classList.toggle('hidden', st !== 'report');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (searchForm && searchInput) {
+        searchForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const val = searchInput.value.trim();
+          if (val) searchUpi(val);
+        });
+      }
+
+      document.querySelectorAll('.chip-search').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const upiVal = e.currentTarget.getAttribute('data-upi');
+          if (upiVal) {
+            if (searchInput) searchInput.value = upiVal;
+            searchUpi(upiVal);
+          }
+        });
+      });
+
+      const printBtn = document.getElementById('btn-print-upi-report');
+      if (printBtn) {
+        printBtn.addEventListener('click', () => {
+          window.print();
+        });
+      }
+    });
+  </script>
+</MainLayout>

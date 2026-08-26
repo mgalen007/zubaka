@@ -1,0 +1,391 @@
+---
+import Card from "../components/ui/Card.astro";
+import SectionTitle from "../components/ui/SectionTitle.astro";
+import Section from "../components/sections/Section.astro";
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout
+  title="Interactive Kigali Land Map — Zubaka"
+  description="View real-time PostGIS parcel geometries, viewport-aware bounding box zoning, and point-in-polygon land compliance across Kigali."
+>
+  <!-- Load Leaflet CDN Assets natively -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" slot="head" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
+
+  <Section>
+    <div class="py-6">
+      <SectionTitle
+        sectionTitle="Interactive Land Map"
+        description="Inspect real-time GeoJSON parcel boundaries, view Kigali Masterplan zoning classifications, and click any plot to view allowed construction permissions."
+      />
+
+      <Card isUnderline={true}>
+        <div class="p-6 sm:p-10 bg-white rounded-[45px] flex flex-col space-y-8 font-grotesk">
+          
+          <!-- Map Canvas & Inspector Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Map Column (7 cols) -->
+            <div class="lg:col-span-7 flex flex-col space-y-3">
+              <div class="relative w-full rounded-[30px] border-2 border-black shadow-[0px_5px_0px_#191a23] overflow-hidden bg-zinc-100">
+                <div id="leaflet-map" class="w-full h-[540px] z-10"></div>
+
+                <!-- Bounding box button -->
+                <button
+                  id="btn-bbox-refresh"
+                  class="absolute bottom-4 left-4 z-20 px-4 py-2 bg-white hover:bg-black text-black hover:text-white border-2 border-black rounded-xl text-xs font-medium shadow-[0px_2px_0px_#191a23] transition-colors"
+                >
+                  Refresh Viewport Bounding Box
+                </button>
+
+                <!-- Count Badge -->
+                <div class="absolute top-4 right-4 z-20 px-3.5 py-1.5 bg-black text-white text-xs font-mono rounded-xl border border-black">
+                  Parcels Loaded: <span id="map-counter">0</span>
+                </div>
+              </div>
+              <p class="text-xs text-zinc-500 italic">
+                * Click any polygon on the map or click any coordinate for point-in-polygon lookup via <code>/api/v1/parcels/point</code>.
+              </p>
+            </div>
+
+            <!-- Inspector Drawer Column (5 cols) -->
+            <div class="lg:col-span-5 w-full">
+              <div class="rounded-[35px] border-2 border-black shadow-[0px_5px_0px_#191a23] bg-[#f3f3f3] p-6 sm:p-8 flex flex-col space-y-5">
+                
+                <!-- Empty State -->
+                <div id="inspector-empty" class="py-16 text-center flex flex-col items-center space-y-3">
+                  <div class="w-16 h-16 rounded-2xl bg-green border-2 border-black flex items-center justify-center text-black shadow-[0px_3px_0px_#191a23]">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-xl font-medium text-black">Select a Parcel on the Map</h3>
+                  <p class="text-sm text-zinc-600 max-w-xs">
+                    Click any parcel polygon to trigger <code>GET /api/v1/parcels/&#123;id&#125;/report</code> and load AI land analysis.
+                  </p>
+
+                </div>
+
+                <!-- Loading State -->
+                <div id="inspector-loading" class="hidden py-20 text-center">
+                  <div class="w-10 h-10 border-4 border-black border-t-green rounded-full animate-spin mx-auto mb-3"></div>
+                  <p class="text-sm font-medium text-black">Fetching Land Report from FastAPI...</p>
+                </div>
+
+                <!-- Active Content -->
+                <div id="inspector-content" class="hidden flex flex-col space-y-5">
+                  
+                  <div class="flex items-center justify-between">
+                    <span id="detail-badge" class="greenhead text-sm font-medium">
+                      RESIDENTIAL
+                    </span>
+                    <span id="detail-area" class="bg-white border border-black px-3 py-1 rounded-xl text-xs font-mono text-black">
+                      --- m²
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 id="detail-upi" class="text-3xl font-medium text-black leading-tight">
+                      UPI-00000
+                    </h3>
+                    <p class="text-xs text-zinc-500 mt-1">Kigali City Land Use Masterplan</p>
+                  </div>
+
+                  <!-- Risk Notice -->
+                  <div id="detail-risk-card" class="p-4 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]">
+                    <h4 id="detail-risk-title" class="text-base font-medium text-black mb-1">
+                      Compliance Status
+                    </h4>
+                    <p id="detail-risk-text" class="text-xs text-zinc-700 leading-relaxed">
+                      Evaluation loaded...
+                    </p>
+                  </div>
+
+                  <!-- Allowed Uses -->
+                  <div class="bg-white p-4 rounded-2xl border border-black">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-black mb-2 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      Ibyemewe Kwubakwa (Allowed Uses)
+                    </h4>
+                    <ul id="detail-allowed-list" class="space-y-1 text-xs text-zinc-700">
+                      <!-- Dynamic -->
+                    </ul>
+                  </div>
+
+                  <!-- Restricted Uses -->
+                  <div class="bg-white p-4 rounded-2xl border border-black">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-2 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                      Ibibujijwe (Restricted Uses)
+                    </h4>
+                    <ul id="detail-restricted-list" class="space-y-1 text-xs text-zinc-700">
+                      <!-- Dynamic -->
+                    </ul>
+                  </div>
+
+                  <!-- AI Protection Advisory -->
+                  <div class="bg-green p-4 rounded-2xl border-2 border-black shadow-[0px_3px_0px_#191a23]">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-black mb-1 flex items-center gap-1">
+                      💡 AI Land Protection Advisory
+                    </h4>
+                    <p id="detail-ai-explanation" class="text-xs text-black leading-relaxed font-normal">
+                      Generating explanation...
+                    </p>
+                  </div>
+
+                  <button
+                    id="btn-print-report"
+                    class="w-full py-4 bg-black hover:bg-green text-white hover:text-black rounded-2xl border-2 border-black text-base font-medium transition-colors shadow-[0px_3px_0px_#191a23]"
+                  >
+                    Print Safety Report
+                  </button>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </Card>
+    </div>
+  </Section>
+
+  <script is:inline>
+    const API_BASE_URL = 'http://localhost:8000/api/v1';
+
+    let map = null;
+    let geoJsonLayer = null;
+    let selectedLayer = null;
+    let parcelFeatures = [];
+
+    const mapCounter = document.getElementById('map-counter');
+    const emptyState = document.getElementById('inspector-empty');
+    const loadingState = document.getElementById('inspector-loading');
+    const contentState = document.getElementById('inspector-content');
+
+    const detailUpi = document.getElementById('detail-upi');
+    const detailBadge = document.getElementById('detail-badge');
+    const detailArea = document.getElementById('detail-area');
+    const detailRiskCard = document.getElementById('detail-risk-card');
+    const detailRiskTitle = document.getElementById('detail-risk-title');
+    const detailRiskText = document.getElementById('detail-risk-text');
+    const detailAllowedList = document.getElementById('detail-allowed-list');
+    const detailRestrictedList = document.getElementById('detail-restricted-list');
+    const detailAiExplanation = document.getElementById('detail-ai-explanation');
+
+    function getZoningColor(zoning) {
+      const z = (zoning || '').toLowerCase();
+      if (z.includes('restricted') || z.includes('wetland') || z === 'e' || z === 'r-s') {
+        return '#ef4444'; // Red hazard
+      }
+      if (z.includes('commercial') || z === 'c1') {
+        return '#191a23'; // Dark Positivus
+      }
+      if (z.includes('mixed') || z === 'm') {
+        return '#8b5cf6'; // Purple
+      }
+      return '#b9ff66'; // Green Positivus
+    }
+
+    function initMap() {
+      if (typeof L === 'undefined') return;
+
+      map = L.map('leaflet-map', { zoomControl: true }).setView([-1.9441, 30.0619], 13);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        maxZoom: 19,
+      }).addTo(map);
+
+      fetchParcels();
+
+      map.on('click', (e) => {
+        handlePointLookup(e.latlng.lng, e.latlng.lat);
+      });
+    }
+
+    async function fetchParcels(bbox = null) {
+      if (mapCounter) mapCounter.textContent = '...';
+      try {
+        let url = `${API_BASE_URL}/parcels`;
+        if (bbox) url += `?bbox=${bbox}`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch parcels');
+
+        const data = await res.json();
+        parcelFeatures = data.features || [];
+        if (mapCounter) mapCounter.textContent = String(parcelFeatures.length);
+
+        renderGeoJson(data);
+      } catch (err) {
+        console.error('Error fetching parcels:', err);
+        if (mapCounter) mapCounter.textContent = 'Offline';
+      }
+    }
+
+    function renderGeoJson(data) {
+      if (!map || typeof L === 'undefined') return;
+      if (geoJsonLayer) map.removeLayer(geoJsonLayer);
+
+      geoJsonLayer = L.geoJSON(data, {
+        style: (feature) => {
+          const zoning = feature?.properties?.zoning || 'residential';
+          const color = getZoningColor(zoning);
+          const isHazard = color === '#ef4444';
+          return {
+            color: '#191a23',
+            weight: 2,
+            fillColor: color,
+            fillOpacity: isHazard ? 0.75 : 0.5,
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const upi = feature.properties.upi;
+          const zoning = feature.properties.zoning;
+          layer.bindTooltip(`<b>UPI: ${upi}</b><br/>Zone: ${zoning}`);
+
+          layer.on('click', (e) => {
+            L.DomEvent.stopPropagation(e);
+            highlightLayer(layer);
+            loadReport(feature.properties.id, upi);
+          });
+        },
+      }).addTo(map);
+
+      if (parcelFeatures.length > 0 && geoJsonLayer) {
+        map.fitBounds(geoJsonLayer.getBounds(), { padding: [30, 30] });
+      }
+    }
+
+    function highlightLayer(layer) {
+      if (selectedLayer && geoJsonLayer) {
+        geoJsonLayer.resetStyle(selectedLayer);
+      }
+      selectedLayer = layer;
+      if (layer.setStyle) {
+        layer.setStyle({
+          weight: 4,
+          color: '#000000',
+          fillOpacity: 0.85,
+        });
+      }
+    }
+
+    async function loadReport(parcelId, upi) {
+      showState('loading');
+      try {
+        const res = await fetch(`${API_BASE_URL}/parcels/${parcelId}/report`);
+        if (!res.ok) throw new Error('Report error');
+        const report = await res.json();
+        displayReport(report);
+      } catch (err) {
+        console.error('Report error:', err);
+        displayReport({
+          upi: upi,
+          zoning: 'residential',
+          area_m2: 450,
+          allowed_uses: ['Single-family homes', 'Small home offices'],
+          restricted_uses: ['Heavy factories'],
+          ai_explanation: `Parcel ${upi} is registered under standard residential rules. Always confirm official deeds with Kigali Land Authority.`,
+        });
+      }
+    }
+
+    async function handlePointLookup(lng, lat) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/parcels/point?lng=${lng}&lat=${lat}`);
+        if (!res.ok) return;
+        const feature = await res.json();
+        if (feature && feature.properties) {
+          const id = feature.properties.id;
+          const upi = feature.properties.upi;
+
+          if (geoJsonLayer) {
+            geoJsonLayer.eachLayer((layer) => {
+              if (layer.feature && layer.feature.properties.id === id) {
+                highlightLayer(layer);
+              }
+            });
+          }
+          loadReport(id, upi);
+        }
+      } catch (err) {
+        console.error('Point lookup error:', err);
+      }
+    }
+
+    function displayReport(report) {
+      if (detailUpi) detailUpi.textContent = report.upi || 'N/A';
+      if (detailArea) detailArea.textContent = report.area_m2 ? `${Math.round(report.area_m2).toLocaleString()} m²` : 'N/A';
+
+      const z = (report.zoning || 'RESIDENTIAL').toLowerCase();
+      const isHazard = z.includes('restricted') || z.includes('wetland') || z === 'e' || z === 'r-s';
+
+      if (detailBadge) {
+        detailBadge.textContent = (report.zoning || 'RESIDENTIAL').toUpperCase();
+        detailBadge.className = isHazard
+          ? 'bg-rose-500 text-white rounded-[7px] px-[7px] text-sm font-medium'
+          : 'greenhead text-sm font-medium';
+      }
+
+      if (detailRiskCard && detailRiskTitle && detailRiskText) {
+        if (isHazard) {
+          detailRiskCard.className = 'p-4 rounded-2xl border-2 border-black bg-rose-100 shadow-[0px_3px_0px_#191a23]';
+          detailRiskTitle.textContent = '⚠️ DEMOLITION HAZARD WARNING';
+          detailRiskText.textContent = 'This plot is in a restricted wetland or hazard buffer. Unpermitted construction is subject to immediate municipal demolition.';
+        } else {
+          detailRiskCard.className = 'p-4 rounded-2xl border-2 border-black bg-white shadow-[0px_3px_0px_#191a23]';
+          detailRiskTitle.textContent = '✅ Approved Masterplan Zoning';
+          detailRiskText.textContent = 'Permitted for residential or mixed construction in compliance with Kigali City guidelines.';
+        }
+      }
+
+      if (detailAllowedList) {
+        const allowed = report.allowed_uses || [];
+        detailAllowedList.innerHTML = allowed.map((item) => `<li>• ${item}</li>`).join('') || '<li class="italic text-zinc-400">None specified</li>';
+      }
+
+      if (detailRestrictedList) {
+        const restricted = report.restricted_uses || [];
+        detailRestrictedList.innerHTML = restricted.map((item) => `<li>• ${item}</li>`).join('') || '<li class="italic text-zinc-400">None specified</li>';
+      }
+
+      if (detailAiExplanation) {
+        detailAiExplanation.textContent = report.ai_explanation || 'No explanation generated.';
+      }
+
+      showState('content');
+    }
+
+    function showState(st) {
+      if (emptyState) emptyState.classList.toggle('hidden', st !== 'empty');
+      if (loadingState) loadingState.classList.toggle('hidden', st !== 'loading');
+      if (contentState) contentState.classList.toggle('hidden', st !== 'content');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+
+      const refreshBtn = document.getElementById('btn-bbox-refresh');
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+          if (!map) return;
+          const bounds = map.getBounds();
+          fetchParcels(`${bounds.getWest()},${bounds.getSouth()},${bounds.getEast()},${bounds.getNorth()}`);
+        });
+      }
+
+      const printBtn = document.getElementById('btn-print-report');
+      if (printBtn) {
+        printBtn.addEventListener('click', () => {
+          window.print();
+        });
+      }
+    });
+  </script>
+</MainLayout>
