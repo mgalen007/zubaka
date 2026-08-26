@@ -1,0 +1,30 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+
+type Weight = "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
+
+interface Props extends astroHTML.JSX.SVGAttributes {
+  name: string;
+  weight?: Weight;
+}
+
+const { name, weight = "regular", class: className = "w-5 h-5", ...attrs } = Astro.props;
+
+const svgPath = path.join(
+  process.cwd(),
+  "node_modules/@phosphor-icons/core/assets",
+  weight,
+  `${name}.svg`
+);
+
+let inner = "";
+try {
+  const raw = fs.readFileSync(svgPath, "utf-8");
+  inner = raw.replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
+} catch {
+  throw new Error(`Icon "${name}" (weight: ${weight}) not found in @phosphor-icons/core`);
+}
+---
+
+<svg viewBox="0 0 256 256" fill="currentColor" class={className} {...attrs} set:html={inner} />

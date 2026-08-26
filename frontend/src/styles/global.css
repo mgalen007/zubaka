@@ -3,20 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  @font-face {
-    font-family: "Grotesk";
-    src: url("/fonts/grotesk/SpaceGrotesk-Regular.woff"), format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Grotesk";
-    src: url("/fonts/grotesk/SpaceGrotesk-Medium.woff"), format("woff");
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Outfit", sans-serif;
   }
 
   .font-outline {
@@ -131,6 +119,17 @@
 
     .blackhead {
       @apply bg-black text-white rounded-[7px] px-[7px];
+    }
+
+    .nav-link {
+      @apply relative transition-colors duration-200;
+    }
+    .nav-link::after {
+      content: "";
+      @apply absolute left-0 -bottom-1 w-0 h-[2px] bg-green transition-all duration-300 ease-out;
+    }
+    .nav-link:hover::after {
+      @apply w-full;
     }
   }
 }

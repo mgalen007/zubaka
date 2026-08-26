@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a monorepo with two independently-managed apps:
 
 - `backend/` — FastAPI + PostgreSQL/PostGIS API (Python 3.14, managed with `uv`). This is where active development happens.
-- `frontend/` — An Astro + Tailwind site. It is currently the unmodified "Positivus" marketing-page template (see `frontend/README.md`) and is not yet wired up to the backend API — treat it as a starting scaffold, not an integrated frontend.
+- `frontend/` — An Astro + Tailwind site (originally scaffolded from a generic marketing template, now rebuilt around the real product — see `frontend/README.md`) wired up to the backend API: interactive land map, UPI search, zoning rules reference.
 
 ## Backend
 
