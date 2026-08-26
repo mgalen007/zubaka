@@ -1353,7 +1353,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/03/09/0018",
+        "zoning": "residential"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -1500,7 +1503,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/04/01/0019",
+        "zoning": "commercial"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -1575,7 +1581,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/05/02/0020",
+        "zoning": "mixed_use"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -1682,7 +1691,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/01/03/0021",
+        "zoning": "restricted"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -1785,7 +1797,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/02/04/0022",
+        "zoning": "residential"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -1868,7 +1883,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/03/05/0023",
+        "zoning": "commercial"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -1923,7 +1941,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/04/06/0024",
+        "zoning": "mixed_use"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -2046,7 +2067,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/05/07/0025",
+        "zoning": "restricted"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -2097,7 +2121,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/01/08/0026",
+        "zoning": "residential"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -2152,7 +2179,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/02/09/0027",
+        "zoning": "commercial"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -2207,7 +2237,10 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "upi": "1/01/03/03/01/0028",
+        "zoning": "mixed_use"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
