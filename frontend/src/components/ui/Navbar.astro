@@ -20,10 +20,10 @@ const navButton = { href: '/map', label: 'Verify Plot Safety' };
       <Astronav>
         <div class="flex w-full lg:w-auto items-center justify-between">
           <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="/Logo.svg" class="h-8" alt="Zubaka logo" />
+            <img src="/Logo.svg" class="h-8 transition-transform duration-200 hover:scale-105" alt="Zubaka logo" />
           </a>
           <div class="block lg:hidden">
-            <div id="menu-icon" class="w-8 h-8 text-black cursor-pointer">
+            <div id="menu-icon" class="w-8 h-8 text-black cursor-pointer transition-colors duration-200 hover:text-green">
               <Icon id="open-icon" name="list" class="w-8 h-8" />
               <Icon id="close-icon" name="x" class="w-8 h-8 hidden" />
             </div>
@@ -34,9 +34,9 @@ const navButton = { href: '/map', label: 'Verify Plot Safety' };
           <ul class="font-medium flex flex-col p-4 lg:p-0 mt-4 border rounded-lg lg:flex-row lg:space-x-8 lg:mt-0 lg:border-0">
             {menuitems.map((item) => (
               <li>
-                <a 
-                  href={item.href} 
-                  class="mobile-nav-link block py-2 px-3 text-black rounded lg:bg-transparent lg:p-0"
+                <a
+                  href={item.href}
+                  class="mobile-nav-link nav-link block py-2 px-3 text-black rounded lg:bg-transparent lg:p-0 lg:w-fit"
                   data-close-menu="true"
                 >
                   {item.label}
@@ -45,7 +45,7 @@ const navButton = { href: '/map', label: 'Verify Plot Safety' };
             ))}
             <div class="lg:hidden flex items-center justify-center mt-3 gap-4">
               <a 
-                class="mobile-nav-link px-9 py-5 rounded-2xl border border-zinc-900 bg-white hover:bg-black text-black hover:text-white inline-flex" 
+                class="mobile-nav-link px-9 py-5 rounded-2xl border border-zinc-900 bg-white hover:bg-black text-black hover:text-white inline-flex transition-all duration-200 transform hover:scale-105"
                 href={navButton.href}
                 data-close-menu="true"
               >
@@ -58,7 +58,7 @@ const navButton = { href: '/map', label: 'Verify Plot Safety' };
 
       <div>
         <div class="hidden lg:flex items-center gap-4">
-          <a class="px-9 py-5 rounded-2xl border border-zinc-900 bg-white hover:bg-black text-black hover:text-white inline-flex" href={navButton.href}>
+          <a class="px-9 py-5 rounded-2xl border border-zinc-900 bg-white hover:bg-black text-black hover:text-white inline-flex transition-all duration-200 transform hover:scale-105" href={navButton.href}>
             <h2 class="text-center text-xl font-normal leading-7">{navButton.label}</h2>
           </a>
         </div>

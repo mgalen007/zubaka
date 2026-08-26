@@ -36,7 +36,7 @@ import Icon from "../components/ui/Icon.astro";
                 <!-- Refresh area button -->
                 <button
                   id="btn-bbox-refresh"
-                  class="absolute bottom-4 left-4 z-20 px-4 py-2 bg-white hover:bg-black text-black hover:text-white border-2 border-black rounded-xl text-xs font-medium shadow-[0px_2px_0px_#191a23] transition-colors"
+                  class="absolute bottom-4 left-4 z-20 px-4 py-2 bg-white hover:bg-black text-black hover:text-white border-2 border-black rounded-xl text-xs font-medium shadow-[0px_2px_0px_#191a23] transition-all duration-200 transform hover:scale-105"
                 >
                   Refresh This Area
                 </button>
@@ -50,7 +50,7 @@ import Icon from "../components/ui/Icon.astro";
               <!-- Fetch error banner -->
               <div id="map-error-banner" class="hidden p-3 rounded-xl border-2 border-black bg-rose-100 text-xs text-black flex items-center justify-between gap-3">
                 <span>Couldn't load plots right now — check your connection and try again.</span>
-                <button id="btn-map-error-retry" class="shrink-0 px-3 py-1.5 bg-black text-white rounded-lg text-xs font-medium hover:bg-rose-600 transition-colors">
+                <button id="btn-map-error-retry" class="shrink-0 px-3 py-1.5 bg-black text-white rounded-lg text-xs font-medium hover:bg-rose-600 transition-all duration-200 transform hover:scale-105">
                   Retry
                 </button>
               </div>
@@ -159,7 +159,7 @@ import Icon from "../components/ui/Icon.astro";
 
                   <button
                     id="btn-print-report"
-                    class="w-full py-4 bg-black hover:bg-green text-white hover:text-black rounded-2xl border-2 border-black text-base font-medium transition-colors shadow-[0px_3px_0px_#191a23]"
+                    class="w-full py-4 bg-black hover:bg-green text-white hover:text-black rounded-2xl border-2 border-black text-base font-medium transition-all duration-200 transform hover:scale-105 shadow-[0px_3px_0px_#191a23]"
                   >
                     Print Safety Report
                   </button>
@@ -273,6 +273,20 @@ import Icon from "../components/ui/Icon.astro";
           const upi = feature.properties.upi;
           const zoning = feature.properties.zoning;
           layer.bindTooltip(`<b>UPI: ${upi}</b><br/>Zone: ${zoning}`);
+
+          layer.on('mouseover', () => {
+            const styledLayer = layer as L.Path;
+            if (layer !== selectedLayer && styledLayer.setStyle) {
+              styledLayer.setStyle({ weight: 3, fillOpacity: 0.75 });
+              styledLayer.bringToFront();
+            }
+          });
+
+          layer.on('mouseout', () => {
+            if (layer !== selectedLayer && geoJsonLayer) {
+              geoJsonLayer.resetStyle(layer);
+            }
+          });
 
           layer.on('click', (e) => {
             L.DomEvent.stopPropagation(e);

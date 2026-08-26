@@ -87,9 +87,9 @@ const masterplanServices = [
             <div>
               <h3 class="text-2xl font-medium mb-4">Masterplan Guidelines</h3>
               <p class="mb-6">{service.description}</p>
-              <a href={service.link} class="inline-flex items-center px-8 py-4 bg-green text-dark rounded-2xl hover:bg-dark hover:text-white transition-all font-medium border border-black">
+              <a href={service.link} class="group inline-flex items-center px-8 py-4 bg-green text-dark rounded-2xl hover:bg-dark hover:text-white transition-all duration-200 transform hover:scale-105 font-medium border border-black">
                 {service.cta}
-                <Icon name="arrow-right" class="ml-2 w-5 h-5" />
+                <Icon name="arrow-right" class="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </div>
             
@@ -97,8 +97,8 @@ const masterplanServices = [
               <h3 class="text-2xl font-medium mb-4">Permitted Rights & Rules</h3>
               <ul class="space-y-4">
                 {service.benefits.map(benefit => (
-                  <li class="flex items-start">
-                    <Icon name="check-circle" class="mr-2 w-5 h-5 mt-1 text-green shrink-0" />
+                  <li class="group flex items-start transition-transform duration-200 hover:translate-x-1">
+                    <Icon name="check-circle" class="mr-2 w-5 h-5 mt-1 text-green shrink-0 transition-transform duration-200 group-hover:scale-110" />
                     <span>{benefit}</span>
                   </li>
                 ))}
@@ -117,10 +117,10 @@ const masterplanServices = [
             Look up any plot on the map or by its UPI number, or ask our AI assistant for plain-language Kinyarwanda explanations before paying informal land brokers.
           </p>
           <div class="flex justify-center gap-4 flex-wrap">
-            <a href="/search" class="inline-flex items-center px-10 py-5 bg-dark text-white rounded-2xl hover:bg-green hover:text-dark transition-all font-medium text-xl border border-black">
+            <a href="/search" class="inline-flex items-center px-10 py-5 bg-dark text-white rounded-2xl hover:bg-green hover:text-dark transition-all duration-200 transform hover:scale-105 font-medium text-xl border border-black">
               Verify UPI Number
             </a>
-            <a href="/map" class="inline-flex items-center px-10 py-5 bg-green text-black rounded-2xl hover:bg-dark hover:text-white transition-all font-medium text-xl border border-black">
+            <a href="/map" class="inline-flex items-center px-10 py-5 bg-green text-black rounded-2xl hover:bg-dark hover:text-white transition-all duration-200 transform hover:scale-105 font-medium text-xl border border-black">
               Open Land Map
             </a>
           </div>

@@ -120,6 +120,17 @@
     .blackhead {
       @apply bg-black text-white rounded-[7px] px-[7px];
     }
+
+    .nav-link {
+      @apply relative transition-colors duration-200;
+    }
+    .nav-link::after {
+      content: "";
+      @apply absolute left-0 -bottom-1 w-0 h-[2px] bg-green transition-all duration-300 ease-out;
+    }
+    .nav-link:hover::after {
+      @apply w-full;
+    }
   }
 }
 

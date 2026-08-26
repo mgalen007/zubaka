@@ -21,7 +21,7 @@ const links = [
           class="flex flex-col lg:flex-row gap-7 items-center justify-between"
         >
           <picture>
-            <a href="/">
+            <a href="/" class="inline-block transition-transform duration-200 hover:scale-105">
               <Image src={Logo} alt="Zubaka logo" />
             </a>
           </picture>
@@ -30,7 +30,10 @@ const links = [
               links.map((link) => {
                 return (
                   <li class="text-center">
-                    <a class="underline" href={link.href}>
+                    <a
+                      class="underline decoration-transparent underline-offset-4 transition-all duration-200 hover:text-green hover:decoration-green"
+                      href={link.href}
+                    >
                       {link.name}
                     </a>
                   </li>
