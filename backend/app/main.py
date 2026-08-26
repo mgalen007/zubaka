@@ -1,6 +1,7 @@
 from typing import Annotated, cast
 
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,6 +13,14 @@ from app.core.database import get_db
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(parcels_router, prefix="/api/v1")
 app.include_router(land_router, prefix="/api/v1")

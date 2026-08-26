@@ -12,7 +12,7 @@ from app.services.report_service import ReportService
 router = APIRouter(prefix="/land", tags=["land"])
 
 
-@router.get("/report/{upi}")
+@router.get("/report/{upi:path}")
 async def get_land_report_by_upi(
     db: Annotated[AsyncSession, Depends(get_db)],
     upi: str,
