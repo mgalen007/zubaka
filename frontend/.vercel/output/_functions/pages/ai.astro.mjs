@@ -2,7 +2,7 @@
 import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BvIZ4Gm6.mjs';
 import 'kleur/colors';
 import { $ as $$Section, a as $$SectionTitle } from '../chunks/Section_GejLvlJZ.mjs';
-import { $ as $$MainLayout } from '../chunks/MainLayout_BsuaeoN8.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_zMxjt0RD.mjs';
 export { renderers } from '../renderers.mjs';
 
 var __freeze = Object.freeze;
@@ -52,9 +52,9 @@ const $$Ai = createComponent(($$result, $$props, $$slots) => {
       let reply = "Ikibazo cyanyu cyakiriwe. Buri gihe saba icyangombwa cy'ubutaka icyo ari cyo cyose muri RLA kabone n'ubwo abamotsi baba babikwemereye.";
 
       if (q.includes('igishanga') || q.includes('wetland')) {
-        reply = "\u26A0\uFE0F DEMOLITION HAZARD: Kubaka mu igishanga cyangwa inkengero z'amazi mu Mujyi wa Kigali birabujijwe rwose. Inzu zose zubatse mu igishanga zihita zisenywa n'Umujyi wa Kigali bila arirwo rwose!";
+        reply = "DEMOLITION HAZARD: Kubaka mu igishanga cyangwa inkengero z'amazi mu Mujyi wa Kigali birabujijwe rwose. Inzu zose zubatse mu igishanga zihita zisenywa n'Umujyi wa Kigali bila arirwo rwose!";
       } else if (q.includes('abamotsi') || q.includes('broker')) {
-        reply = "\u{1F4A1} KWIRINDA ABAMOTSI: Abamotsi bakunze kugurisha ubutaka butari muri zone yo guturamo. Buri gihe jya kuri shaka y'ubutaka (search bar) uhereye ku numero ya UPI cyangwa uganire n'ibiro by'Umujyi wa Kigali!";
+        reply = "KWIRINDA ABAMOTSI: Abamotsi bakunze kugurisha ubutaka butari muri zone yo guturamo. Buri gihe jya kuri shaka y'ubutaka (search bar) uhereye ku numero ya UPI cyangwa uganire n'ibiro by'Umujyi wa Kigali!";
       } else if (q.includes('r1')) {
         reply = "Zone ya R1 (Single Family Residential) iremewe kubakamo inzu yo guturamo y'umuryango umwe gusa idasumba etaje 2.";
       }
@@ -138,9 +138,9 @@ const $$Ai = createComponent(($$result, $$props, $$slots) => {
       let reply = "Ikibazo cyanyu cyakiriwe. Buri gihe saba icyangombwa cy'ubutaka icyo ari cyo cyose muri RLA kabone n'ubwo abamotsi baba babikwemereye.";
 
       if (q.includes('igishanga') || q.includes('wetland')) {
-        reply = "\u26A0\uFE0F DEMOLITION HAZARD: Kubaka mu igishanga cyangwa inkengero z'amazi mu Mujyi wa Kigali birabujijwe rwose. Inzu zose zubatse mu igishanga zihita zisenywa n'Umujyi wa Kigali bila arirwo rwose!";
+        reply = "DEMOLITION HAZARD: Kubaka mu igishanga cyangwa inkengero z'amazi mu Mujyi wa Kigali birabujijwe rwose. Inzu zose zubatse mu igishanga zihita zisenywa n'Umujyi wa Kigali bila arirwo rwose!";
       } else if (q.includes('abamotsi') || q.includes('broker')) {
-        reply = "\u{1F4A1} KWIRINDA ABAMOTSI: Abamotsi bakunze kugurisha ubutaka butari muri zone yo guturamo. Buri gihe jya kuri shaka y'ubutaka (search bar) uhereye ku numero ya UPI cyangwa uganire n'ibiro by'Umujyi wa Kigali!";
+        reply = "KWIRINDA ABAMOTSI: Abamotsi bakunze kugurisha ubutaka butari muri zone yo guturamo. Buri gihe jya kuri shaka y'ubutaka (search bar) uhereye ku numero ya UPI cyangwa uganire n'ibiro by'Umujyi wa Kigali!";
       } else if (q.includes('r1')) {
         reply = "Zone ya R1 (Single Family Residential) iremewe kubakamo inzu yo guturamo y'umuryango umwe gusa idasumba etaje 2.";
       }
@@ -190,13 +190,13 @@ Active Assistant
 AI
 </div> <div class="bg-zinc-800 text-zinc-100 p-4 rounded-2xl rounded-tl-none border border-zinc-700 text-sm leading-relaxed max-w-[85%]">
 Muraho! Ndi Zubaka AI Protection Assistant. Nshobora kugufasha ku nzu n'ubutaka mu Mujyi wa Kigali:
-<ul class="mt-2 space-y-1 text-xs text-zinc-300"> <li>• Nshobora kubaka inzu yo guturamo mu igishanga?</li> <li>• Ni gute nzirinda abamotsi (informal brokers)?</li> <li>• Niki kiba nubatse bidafite urushya rw'ubwubatsi?</li> </ul> </div> </div> </div> <!-- Quick Prompt Chips --> <div class="pt-2 border-t border-zinc-800"> <span class="block text-xs font-medium text-zinc-400 mb-2">Ibikunze kubazwa (Popular Questions):</span> <div class="flex flex-wrap gap-2"> <button class="ai-chip px-3.5 py-1.5 bg-zinc-800 hover:bg-green text-zinc-200 hover:text-black text-xs rounded-xl border border-zinc-700 transition-colors">
+<ul class="mt-2 space-y-1 text-xs text-zinc-300"> <li>• Nshobora kubaka inzu yo guturamo mu igishanga?</li> <li>• Ni gute nzirinda abamotsi (informal brokers)?</li> <li>• Niki kiba nubatse bidafite urushya rw'ubwubatsi?</li> </ul> </div> </div> </div> <!-- Quick Prompt Chips --> <div class="pt-2 border-t border-zinc-800"> <span class="block text-xs font-medium text-zinc-400 mb-2">Ibikunze kubazwa (Popular Questions):</span> <div class="flex flex-wrap gap-2"> <button class="ai-chip px-3.5 py-1.5 bg-zinc-800 hover:bg-green text-zinc-200 hover:text-black text-xs rounded-xl border border-zinc-700 transition-all duration-200 transform hover:scale-105">
 Nshobora kubaka mu igishanga?
-</button> <button class="ai-chip px-3.5 py-1.5 bg-zinc-800 hover:bg-green text-zinc-200 hover:text-black text-xs rounded-xl border border-zinc-700 transition-colors">
+</button> <button class="ai-chip px-3.5 py-1.5 bg-zinc-800 hover:bg-green text-zinc-200 hover:text-black text-xs rounded-xl border border-zinc-700 transition-all duration-200 transform hover:scale-105">
 Ni gute nzirinda abamotsi?
-</button> <button class="ai-chip px-3.5 py-1.5 bg-zinc-800 hover:bg-green text-zinc-200 hover:text-black text-xs rounded-xl border border-zinc-700 transition-colors">
+</button> <button class="ai-chip px-3.5 py-1.5 bg-zinc-800 hover:bg-green text-zinc-200 hover:text-black text-xs rounded-xl border border-zinc-700 transition-all duration-200 transform hover:scale-105">
 Amabwiriza ya zone R1 ni ayahe?
-</button> </div> </div> <!-- Input Form --> <form id="ai-page-form" class="flex gap-3 pt-2"> <input type="text" id="ai-page-input" placeholder="Andika ikibazo cyanjye (Ask a question in Kinyarwanda or English)..." class="flex-1 bg-zinc-800 text-white placeholder-zinc-400 rounded-2xl px-5 py-4 border border-zinc-700 text-base focus:outline-none focus:ring-2 focus:ring-green"> <button type="submit" class="px-8 py-4 bg-green hover:bg-white text-black font-medium text-lg rounded-2xl border border-black shadow-[0px_3px_0px_#ffffff] transition-colors shrink-0">
+</button> </div> </div> <!-- Input Form --> <form id="ai-page-form" class="flex gap-3 pt-2"> <input type="text" id="ai-page-input" placeholder="Andika ikibazo cyanjye (Ask a question in Kinyarwanda or English)..." class="flex-1 bg-zinc-800 text-white placeholder-zinc-400 rounded-2xl px-5 py-4 border border-zinc-700 text-base focus:outline-none focus:ring-2 focus:ring-green"> <button type="submit" class="px-8 py-4 bg-green hover:bg-white text-black font-medium text-lg rounded-2xl border border-black shadow-[0px_3px_0px_#ffffff] transition-all duration-200 transform hover:scale-105 shrink-0">
 Send Question
 </button> </form> </div> </div> ` })) })}`;
 }, "C:/Users/HP/OneDrive/Documents/Codes/zubaka/frontend/src/pages/ai.astro", void 0);
