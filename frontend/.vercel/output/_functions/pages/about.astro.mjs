@@ -1,12 +1,12 @@
 /* empty css                                 */
 import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BvIZ4Gm6.mjs';
 import 'kleur/colors';
-import { $ as $$MainLayout } from '../chunks/MainLayout_BsuaeoN8.mjs';
-import { $ as $$Services } from '../chunks/Services_w1HyV-Kz.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_zMxjt0RD.mjs';
+import { $ as $$Services } from '../chunks/Services_DYhVFg5M.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$About = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "title": "About Zubaka", "description": "Why Zubaka exists: protecting Kigali land buyers from informal broker fraud using real PostGIS parcel data and the Kigali Masterplan." }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="space-y-20"> <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-3"> <div class="relative flex flex-col items-center" id="hero"> <div class="row items-center py-5 md:pb-20 md:pt-10 max-w-3xl"> <div class="text-center space-y-10"> <h2 class="text-5xl font-medium leading-none md:text-6xl">Land fraud shouldn't be this easy</h2> <p class="mt-6 mb-8 text-xl font-normal leading-7 sm:mb-12">
+  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "title": "About Zubaka", "description": "Why Zubaka exists: protecting Kigali land buyers from informal broker fraud using real plot boundaries and the Kigali Masterplan." }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="space-y-20"> <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-3"> <div class="relative flex flex-col items-center" id="hero"> <div class="row items-center py-5 md:pb-20 md:pt-10 max-w-3xl"> <div class="text-center space-y-10"> <h2 class="text-5xl font-medium leading-none md:text-6xl">Land fraud shouldn't be this easy</h2> <p class="mt-6 mb-8 text-xl font-normal leading-7 sm:mb-12">
 Across Kigali, informal brokers sell plots without disclosing that they sit in
                             a wetland buffer, an industrial-only zone, or a restricted area pending government
                             review — leaving buyers to find out only after they've paid, sometimes right before
@@ -14,8 +14,8 @@ Across Kigali, informal brokers sell plots without disclosing that they sit in
                             by its Unique Parcel Identifier (UPI) or on the map, and see its real Masterplan
                             zoning before you commit to anything.
 </p> </div> </div> </div> <div class="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto text-center md:text-left"> <div class="bg-gray rounded-2xl p-8 border border-black shadow-[0px_3px_0px_#191a23]"> <h3 class="text-2xl font-medium mb-4">How it works</h3> <p>
-Parcel boundaries are real PostGIS geometries queried live from a PostgreSQL/PostGIS
-                        database. Each parcel is matched against Kigali's zoning categories (residential,
+Every plot's boundary comes from real, official map data — not a broker's word.
+                        Each plot is checked against Kigali's zoning categories (residential,
                         commercial, mixed-use, restricted/wetland), and an AI model adds a plain-language
                         explanation of what that means for you — it only explains the result, it never
                         decides the zoning itself.
